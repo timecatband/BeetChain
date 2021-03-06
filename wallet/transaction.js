@@ -30,6 +30,18 @@ class Transaction {
     return transaction;
   }
 
+  static generateNameChangeTransaction(senderWallet, from, to) {
+      const transaction = new this();
+      transaction.type = "NAME";
+      transaction.output = {
+	  oldName: from,
+	  newName: to,
+	  fee: 1
+      }
+    Transaction.signTransaction(transaction, senderWallet);
+    return transaction;
+  }
+
   static signTransaction(transaction, senderWallet) {
     transaction.input = {
       timestamp: Date.now(),

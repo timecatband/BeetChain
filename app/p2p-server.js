@@ -58,7 +58,13 @@ class P2pserver {
 
         case MESSAGE_TYPE.transaction:
           let thresholdReached = null;
+          if (this.transactionPool.transactionExists(data.transaction)) {
+	      break;
+	  }
           if (!this.transactionPool.transactionExists(data.transaction)) {
+	  console.log("Received transaction");
+	      console.log(message);
+
             thresholdReached = this.transactionPool.addTransaction(
               data.transaction
             );
@@ -68,7 +74,9 @@ class P2pserver {
           if (this.transactionPool.thresholdReached()) {
             console.log(this.blockchain.getLeader(), this.wallet.getPublicKey());
             if (this.blockchain.getLeader() == this.wallet.getPublicKey()) {
-              console.log("Creating block");
+              console.log("Creating block 2");
+	      console.log("Transactions are: " );
+	      console.log(this.transactionPool.transactions);
               let block = this.blockchain.createBlock(
                 this.transactionPool.transactions,
                 this.wallet
@@ -80,7 +88,6 @@ class P2pserver {
           break;
 
         case MESSAGE_TYPE.block:
-
 
           if (this.blockchain.isValidBlock(data.block)) {
             // this.blockchain.addBlock(data.block);

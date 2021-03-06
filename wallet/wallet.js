@@ -31,6 +31,13 @@ class Wallet {
     return transaction;
   }
 
+  setName(oldName, newName, blockchain, transactionPool) {
+      // Client side fee check for convenient?
+      let transaction = Transaction.generateNameChangeTransaction(this, oldName, newName);
+      transactionPool.addTransaction(transaction);
+      return transaction;
+  }
+
   getBalance(blockchain) {
     return blockchain.getBalance(this.publicKey);
   }

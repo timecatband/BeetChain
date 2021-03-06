@@ -64,4 +64,30 @@ app.listen(HTTP_PORT, () => {
   console.log(`Listening on port ${HTTP_PORT}`);
 });
 
+function publicKey() {
+    return wallet.publicKey;
+}
+
+function setName(oldName, newName) {
+    const transaction = wallet.setName(oldName, newName, blockchain, transactionPool);
+    p2pserver.broadcastTransaction(transaction);
+}
+
+function getBalance(key) {
+    return blockchain.getBalance(key)
+}
+
+function getName(key) {
+    return blockchain.getName(key)
+}
+
+const repl = require('repl');
+r = repl.start('$');
+r.context.publicKey = publicKey;
+r.context.balance = getBalance;
+r.context.setName = setName;
+r.context.getName = getName;
 p2pserver.listen();
+
+
+

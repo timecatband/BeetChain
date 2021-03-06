@@ -6,11 +6,16 @@ class Account {
     this.balance = {
       "5aad9b5e21f63955e8840e8b954926c60e0e2d906fdbc0ce1e3afe249a67f614": 1000
     };
+    this.name = {
+      "5aad9b5e21f63955e8840e8b954926c60e0e2d906fdbc0ce1e3afe249a67f614": "root"
+    }
+    
   }
 
   initialize(address) {
     if (this.balance[address] == undefined) {
       this.balance[address] = 0;
+      this.name[address] = "";
       this.addresses.push(address);
     }
   }
@@ -36,10 +41,21 @@ class Account {
   }
 
   update(transaction) {
-    let amount = transaction.output.amount;
-    let from = transaction.input.from;
-    let to = transaction.output.to;
-    this.transfer(from, to, amount);
+      let amount = transaction.output.amount;
+      let from = transaction.input.from;
+      let to = transaction.output.to;
+       this.transfer(from, to, amount);
+  }
+
+  setName(transaction) {
+      this.initialize(transaction.input.from);
+      if (this.name[transaction.input.from] == transaction.output.oldName) {
+	  this.name[transaction.input.from] = transaction.output.newName;
+      }
+  }
+  getName(address) {
+      this.initialize(address);
+      return this.name[address];
   }
 
   transferFee(block, transaction) {

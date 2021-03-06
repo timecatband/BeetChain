@@ -8,7 +8,8 @@ let secret = "i am the first leader";
 const TRANSACTION_TYPE = {
   transaction: "TRANSACTION",
   stake: "STAKE",
-  validator_fee: "VALIDATOR_FEE"
+  validator_fee: "VALIDATOR_FEE",
+  name_change: "NAME"
 };
 
 class Blockchain {
@@ -27,7 +28,6 @@ class Blockchain {
     );
 
     this.chain.push(block);
-    console.log("NEW BLOCK ADDED");
     return block;
   }
 
@@ -77,6 +77,10 @@ class Blockchain {
     return this.accounts.getBalance(publicKey);
   }
 
+  getName(publicKey) {
+    return this.accounts.getName(publicKey);
+  }
+
   getLeader() {
     return this.stakes.getMax(this.validators.list);
   }
@@ -94,29 +98,37 @@ class Blockchain {
       Block.verifyBlock(block) &&
       Block.verifyLeader(block, this.getLeader())
     ) {
-      console.log("block valid");
-      this.addBlock(block);
+      this.chain.push(block);
       this.executeTransactions(block);
       return true;
     } else {
-      // console.log(
-      //   block.lastHash !== lastBlock.hash,
-      //   block.hash !== Block.blockHash(block),
-      //   Block.verifyBlock(block),
-      //   Block.verifyLeader(block, this.getLeader())
-      // );
+	console.log(this);
+	console.log(block);
+ console.log(
+         block.lastHash == lastBlock.hash,
+         block.hash == Block.blockHash(block),
+         Block.verifyBlock(block),
+         Block.verifyLeader(block, this.getLeader())
+       );
 
       return false;
     }
   }
 
   executeTransactions(block) {
-    block.data.forEach(transaction => {
+      console.log("Accounts")
+	  console.log(this.accounts);
+    block.data[0].forEach(transaction => {
+	    console.log(transaction);
       switch (transaction.type) {
         case TRANSACTION_TYPE.transaction:
           this.accounts.update(transaction);
           this.accounts.transferFee(block, transaction);
           break;
+        case TRANSACTION_TYPE.name_change:
+  	  this.accounts.setName(transaction);
+  	  this.accounts.transferFee(block, transaction);
+   	  break;
         case TRANSACTION_TYPE.stake:
           this.stakes.update(transaction);
           this.accounts.decrement(
@@ -137,6 +149,8 @@ class Blockchain {
           }
           break;
       }
+      console.log("Accounts 2")
+      console.log(this.accounts);
     });
   }
 

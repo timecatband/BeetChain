@@ -28,6 +28,8 @@ class Block {
   static createBlock(lastBlock, _data, wallet) {
     let hash;
     let timestamp = Date.now();
+    console.log("Creating block");
+    console.log(lastBlock);
     const lastHash = lastBlock.hash;
     let data = [];
     data.push(_data);

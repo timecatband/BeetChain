@@ -26,8 +26,7 @@ app.get("/ico/blocks", (req, res) => {
   res.json(blockchain.chain);
 });
 
-app.post("/ico/transact", (req, res) => {
-  const { to, amount, type } = req.body;
+function doTransaction(to, amount, type) {
   const transaction = wallet.createTransaction(
     to,
     amount,
@@ -40,8 +39,15 @@ app.post("/ico/transact", (req, res) => {
     let block = blockchain.createBlock(transactionPool.transactions, wallet);
     p2pserver.broadcastBlock(block);
   }
-  res.redirect("/ico/transactions");
-});
+}
+
+function ico(dst) {
+    doTransaction(dst, 100, "TRANSACTION");
+    doTransaction(dst, 100, "TRANSACTION");
+    doTransaction(dst, 100, "TRANSACTION");
+    doTransaction(dst, 100, "TRANSACTION");
+    doTransaction(dst, 100, "TRANSACTION");
+}
 
 app.get("/ico/public-key", (req, res) => {
   res.json({ publicKey: wallet.publicKey });
@@ -58,5 +64,11 @@ app.post("/ico/balance-of", (req, res) => {
 app.listen(HTTP_PORT, () => {
   console.log(`Listening on port ${HTTP_PORT}`);
 });
+
+const repl = require('repl');
+r = repl.start('$');
+r.context.doTransaction = doTransaction;
+r.context.ico = ico;
+r.context.balance = () => { blockchain.getBalance(wallet.publicKey); }
 
 p2pserver.listen();
