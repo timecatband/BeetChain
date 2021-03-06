@@ -22,7 +22,14 @@ class Blockchain {
 
   getLastBlockHash() {
       if (this.chain.length == 0) return "genesis-hash";
+      console.log("Last block hash");
+      console.log(this.chain[this.chain.length-1].hash);
       return this.chain[this.chain.length-1].hash;
+  }
+
+  getPreviousBlockHash() {
+      if (this.chain.length < 2) return "genesis-hash";
+      return this.chain[this.chain.length-2].hash;
   }
 
   addBlock(data) {
