@@ -61,8 +61,10 @@ class P2pserver {
           if (this.transactionPool.transactionExists(data.transaction)) {
 	      break;
 	  }
-	  if (data.transaction.blockHash != this.blockchain.getLastBlockHash()) {
+	  if (data.transaction.output.blockHash != this.blockchain.getLastBlockHash()) {
 	      console.log("Dropping message");
+	      console.log("bl: " + data.transaction.blockHash);
+	      console.log("ch: " + this.blockchain.getLastBlockHash());
 	      break;
 	  }
           if (!this.transactionPool.transactionExists(data.transaction)) {
