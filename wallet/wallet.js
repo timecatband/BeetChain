@@ -26,14 +26,14 @@ class Wallet {
       );
       return;
     }
-    let transaction = Transaction.newTransaction(this, to, amount, type);
+    let transaction = Transaction.newTransaction(this, to, amount, type, blockchain.getLastBlockHash());
     transactionPool.addTransaction(transaction);
     return transaction;
   }
 
   setName(oldName, newName, blockchain, transactionPool) {
       // Client side fee check for convenient?
-      let transaction = Transaction.generateNameChangeTransaction(this, oldName, newName);
+      let transaction = Transaction.generateNameChangeTransaction(this, oldName, newName, blockchain.getLastBlockHash());
       transactionPool.addTransaction(transaction);
       return transaction;
   }

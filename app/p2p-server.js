@@ -62,9 +62,6 @@ class P2pserver {
 	      break;
 	  }
           if (!this.transactionPool.transactionExists(data.transaction)) {
-	  console.log("Received transaction");
-	      console.log(message);
-
             thresholdReached = this.transactionPool.addTransaction(
               data.transaction
             );

@@ -20,6 +20,11 @@ class Blockchain {
     this.validators = new Validators();
   }
 
+  getLastBlockHash() {
+      if (this.chain.length == 0) return "genesis-hash";
+      return this.chain[this.chain.length-1].hash;
+  }
+
   addBlock(data) {
     let block = Block.createBlock(
       this.chain[this.chain.length - 1],
